@@ -1,0 +1,24 @@
+<div class="spinner" *ngIf="showSpinner">
+        <p-progressSpinner></p-progressSpinner>
+</div>
+
+<p (click)="getAndSubmit()" class="submit-click">Submit Category Data</p>
+<p (click)="postArrayofProducts()" class="submit-click">Submit Product Data</p>
+
+<div class="image-download" *ngIf="showDownloads">
+    <div class="heading">
+        Your Data are being Posted - Please don't refresh or use any other service!
+    </div>
+    <div class="download-progress">
+        <div class="download-count">
+            <p class="downloaded">{{dataPostedCount}}</p> <span>_______</span>
+            <p class="download-total">{{totalDataPosts}}</p>
+        </div>
+        <div class="download-progress">
+            <p-progressBar [value]="dataPostedpercentage"></p-progressBar>
+        </div>
+        <div class="progress-spinner">
+            <p-progressBar mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+        </div>
+    </div>
+</div>

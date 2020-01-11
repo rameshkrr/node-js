@@ -1,0 +1,780 @@
+
+<?php 
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+$baseurl=$storeManager->getStore()->getBaseUrl();
+$Url = str_replace('/en', '', $baseurl);
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+?>
+<section class="home-page-content">
+<div class="contents-home">
+<div class="owl-carousel" id="owl-banner">
+  <div> 
+  <img src="<?php echo $this->getViewFileUrl('images/banner_img1.jpg'); ?>"  alt="" />
+  <div class="carousel-caption d-md-block">
+			  	<h4>largest Wholesaler stockist of</h4>
+			    <h1>Corporate Gifts & Promotional Giveaways</h1>
+			    <a href="#" class="btn btn-primary">View all</a>
+			  </div>
+  </div>
+  <div> 
+<img src="<?php echo $this->getViewFileUrl('images/banner_img1.jpg'); ?>"  alt="" />
+<div class="carousel-caption d-md-block">
+			  	<h4>largest Wholesaler stockist of</h4>
+			    <h1>Corporate Gifts & Promotional Giveaways</h1>
+			    <a href="#" class="btn btn-primary">View all</a>
+			  </div>
+  </div>
+  <div> 
+<img src="<?php echo $this->getViewFileUrl('images/banner_img1.jpg'); ?>"  alt="" />
+<div class="carousel-caption d-md-block">
+			  	<h4>largest Wholesaler stockist of</h4>
+			    <h1>Corporate Gifts & Promotional Giveaways</h1>
+			    <a href="#" class="btn btn-primary">View all</a>
+			  </div>
+
+  </div>
+</div>
+</div>
+<div class="container">
+			<div class="brand-img">
+			
+				<img src="<?php echo $this->getViewFileUrl('images/home-brands.png'); ?>" width="100%">
+			</div>
+			<div class="row">
+				<div class="col-md-4 feature-details-wrapper">
+					<img src="<?php echo $this->getViewFileUrl('images/feature_img1.jpg'); ?>">
+					<div class="feature-details-content">
+						<h5>Print to <br> look Professional</h5>
+						<a href="#">Read More></a>
+					</div>
+				</div>
+				<div class="col-md-4 feature-details-wrapper">
+					<img src="<?php echo $this->getViewFileUrl('images/feature_img2.jpg'); ?>">
+					<div class="feature-details-content">
+						<h5>Catalog <br> Collections</h5>
+						<a href="#">Read More></a>
+					</div>
+				</div>
+				<div class="col-md-4 feature-details-wrapper">
+					<img src="<?php echo $this->getViewFileUrl('images/feature_img3.jpg'); ?>">
+					<div class="feature-details-content">
+						<h5>Jasani <br> Loyalty rewards</h5>
+						<a href="#">Read More></a>
+					</div>
+				</div>
+			</div>
+			
+		
+			<div class="home-tab-items js-tabs">
+
+<div class="tabs">
+		<a href="#starks-panel" id="starks-tab" class="tab active">Featured Products</a>
+		<a href="#lannisters-panel" id="lannisters-tab" class="tab">New Arrivals</a>
+		<a href="#targaryens-panel" id="targaryens-tab" class="tab">Best Sellers</a>
+</div>
+
+<div class="panels">
+		<div id="starks-panel" class="panel active">
+		  <div class="owl-carousel" id="owl-pro">				
+		 <?php 
+												$objectManager =  \Magento\Framework\App\ObjectManager::getInstance();        
+
+												$categoryFactory = $objectManager->get('\Magento\Catalog\Model\CategoryFactory');
+												
+												$categoryHelper = $objectManager->get('\Magento\Catalog\Helper\Category');
+												
+												$categoryRepository = $objectManager->get('\Magento\Catalog\Model\CategoryRepository');
+												$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+												$baseurl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+												$categoryId = 149;
+												
+												$category = $categoryFactory->create()->load($categoryId);
+												$categoryProducts = $category->getProductCollection() ->addAttributeToSelect('*');
+												foreach ($categoryProducts as $product) {
+													//var_dump($product->getData());
+													?>
+<div class="item">
+  <a href="<?php echo $baseurl.$product['url_key'].'.html' ?>">
+									<div class="prdouct-grid">
+										<div class="card">
+											
+												<span class="product-new">New</span>
+												<img class="card-img-top" src="<?php echo $Url.'pub/media/catalog/product'.$product['small_image'] ?>" alt="Card image cap">
+									
+												<div class="card-body">
+													<h5><?php echo $product['name'] ?></h5>
+													<?php 
+													$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+													$product = $objectManager->create('Magento\Catalog\Model\Product')->load($product['entity_id']);
+													
+													
+													 ?>
+													 <!-- simple products Details -->
+					<?php  
+					if($product->getTypeId() == 'simple'){
+						$resources = $objectManager->get('Magento\Framework\App\ResourceConnection');
+						$connection = $resources->getConnection();                      
+					
+						$sql = "select * from inventory_stock_1 where sku = '".$product->getSku()."'";
+						$result = $connection->fetchAll($sql);
+						$option_label = $result[0]['quantity'];
+						$dubai = (int)$option_label;    
+
+						$resourcess = $objectManager->get('Magento\Framework\App\ResourceConnection');
+						$connection = $resourcess->getConnection();														
+						$sql = "select * from inventory_stock_5 where sku = '".$product->getSku()."'";
+						$result = $connection->fetchAll($sql);
+						$option_label = $result[0]['quantity'];
+						$ksa = (int)$option_label;                       
+							 //echo $ksa;  														
+						 
+						 ?><span class="home-current-stock">Current Stock :<?php echo $dubai+$ksa; 			 
+						 ?></span>
+						 <div class="variations">No Variations</div>
+						 <?php
+						 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+						 $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+						 echo "<br>";
+						 
+						 $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+						 $currency2 = $currencysymbol->getStore()->getCurrentCurrencyCode();
+						 
+						 if ($currency2=="AED") {
+							
+						 $currency = $objectManager->create('Magento\Directory\Model\Currency')->load('AED'); 
+						 $currency2 = $currencysymbol->getStore()->getCurrentCurrencyCode();
+
+						echo  "<h4 class=product-price>AED".number_format($currency->convert($product->getPrice(),'AED'), 2)."</h4>";
+						 }
+						 if ($currency2=="SAR") {
+							
+							$currency = $objectManager->create('Magento\Directory\Model\Currency')->load('AED'); 
+							$currency2 = $currencysymbol->getStore()->getCurrentCurrencyCode();
+ 
+						 echo  "<h4 class=product-price>SAR".number_format($currency->convert($product->getPrice(),'SAR'), 2)."</h4>";
+							}
+	
+					
+				 } 
+				 ?>
+
+
+
+
+
+                          <?php if($product->getTypeId() == 'configurable'){                 
+											$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+											$connection = $resource->getConnection();                      
+										
+											$sql = "select * from inventory_stock_1 where sku = '".$product->getSku()."'";
+											$result = $connection->fetchAll($sql);
+											$option_label = $result[0]['quantity'];
+											$dubai = (int)$option_label;                            
+												 // echo $dubai;                
+										    ?> 
+										   
+				   <?php        
+				   							$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+											$connection = $resource->getConnection();														
+											$sql = "select * from inventory_stock_5 where sku = '".$product->getSku()."'";
+											$result = $connection->fetchAll($sql);
+											$option_label = $result[0]['quantity'];
+											$ksa = (int)$option_label;                       
+											   //echo $ksa;  														
+										   
+											 ?><span class="home-current-stock">Current Stock :<?php echo $dubai+$ksa; 
+											 
+											 ?></span>
+										   
+
+
+
+													<div class="home-product-colors d-flex">
+													<?php 
+														$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+														$baseUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore(0)->getBaseUrl();
+														$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+														$baseurl = $storeManager->getStore()->getBaseUrl();
+														$swatchHelper=$objectManager->get("Magento\Swatches\Helper\Media");
+														$swatchCollection = $objectManager->create('Magento\Swatches\Model\ResourceModel\Swatch\Collection');
+
+														$productTypeInstance = $objectManager->get('Magento\ConfigurableProduct\Model\Product\Type\Configurable');
+														$productAttributeOptions = $productTypeInstance->getConfigurableAttributesAsArray($product);
+													foreach ($productAttributeOptions as $key => $value) {
+													
+														$tmp_option = $value['values'];
+														
+															
+															
+															foreach ($tmp_option as $tmp) 
+															{
+																//var_dump($tmp);
+																//echo "<option value='".$key."_".$tmp['value_index']."'>".$tmp['value_index']."</option>";
+															//[7,4,18,19]
+															$oid = $tmp['value_index'];
+															 
+														
+														
+														//echo '<pre>' , var_dump($options->getData()) , '</pre>';
+														
+														foreach($swatchCollection as $swatch){
+															if($swatch['option_id']== $oid){
+															
+													?>
+													
+													<span style="background-color:<?php echo  $swatch['value'] ?>"></span>
+															
+													<?php 
+													
+													
+												}
+											}
+											}
+										}
+									
+										  ?>	
+	
+													</div>
+													<?php 
+													
+
+													$repository = $objectManager->create('Magento\Catalog\Model\ProductRepository');
+													$product = $repository->getById($product['entity_id']);
+													
+													$data = $product->getTypeInstance()->getConfigurableOptions($product);
+													
+													$options = array();
+													
+													foreach($data as $attr){
+													  foreach($attr as $p){
+														  //var_dump($p);
+														$options[$p['sku']][$p['attribute_code']] = $p['option_title'];
+													  }
+													}
+													
+													
+													foreach($options as $sku =>$d){
+													  $pr = $repository->get($sku);
+													//   foreach($d as $k => $v)
+													// 	echo $k.' - '.$v.' ';
+													//   echo ' : '.$pr->getPrice()."\n";
+													}
+													?>
+													<h4 class="product-price">								 
+														 <?php          
+                        $_childProducts = $product->getTypeInstance()->getUsedProducts($product);
+                        foreach ($_childProducts as $simpleProduct){
+                        $price_child = $simpleProduct['price'];                
+
+                        $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+                        $currency2 = $currencysymbol->getStore()->getCurrentCurrencyCode();
+                        $currency = $objectManager->create('Magento\Directory\Model\Currency')->load('SAR');  
+                        
+                         if($currency2=="AED"){
+                        if ($simpleProduct === reset($_childProducts))                 
+                       echo "AED".number_format($currency->convert($price_child,'AED'), 2);?>
+                       <?php  if ($simpleProduct === end($_childProducts))
+                            echo '';
+                         }
+                         if($currency2=="SAR"){
+                            if ($simpleProduct === reset($_childProducts))                       
+                            echo "SAR".number_format($currency->convert($price_child,'SAR'), 2);
+                            if ($simpleProduct === end($_childProducts))
+                                echo '';
+                     }
+                    
+														}  
+													}
+													
+                 ?></h4>
+													<?php 
+												
+														
+													
+														?>
+
+												</div>
+									
+									
+
+										
+										</div>
+												</div>
+												</a>
+				
+												
+		</div>
+		<?php
+		
+												}
+											
+											?>
+ </div>
+ </div>
+ 
+
+		<div id="lannisters-panel" class="panel">
+				<!--  New Arrivals Start -->
+				<div class="owl-carousel" id="owl-pro2">
+		 <?php 
+												$objectManager =  \Magento\Framework\App\ObjectManager::getInstance();        
+
+												$categoryFactory = $objectManager->get('\Magento\Catalog\Model\CategoryFactory');
+												
+												$categoryHelper = $objectManager->get('\Magento\Catalog\Helper\Category');
+												
+												$categoryRepository = $objectManager->get('\Magento\Catalog\Model\CategoryRepository');
+												$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+												$baseurl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+												$categoryId = 149;
+												
+												$category = $categoryFactory->create()->load($categoryId);
+												$categoryProducts = $category->getProductCollection() ->addAttributeToSelect('*');
+												foreach ($categoryProducts as $product) {
+													//var_dump($product->getData());
+													?>
+<div class="item">
+  <a href="<?php echo $baseurl.$product['url_key'].'.html' ?>">
+									<div class="prdouct-grid">
+										<div class="card">
+											
+												<span class="product-new">New</span>
+												<img class="card-img-top" src="<?php echo $Url.'pub/media/catalog/product'.$product['small_image'] ?>" alt="Card image cap">
+									
+												<div class="card-body">
+													<h5><?php echo $product['name'] ?></h5>
+													<?php 
+													$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+													$product = $objectManager->create('Magento\Catalog\Model\Product')->load($product['entity_id']);
+													
+													
+													 ?>
+													  <!-- simple products Details -->
+					<?php  
+					if($product->getTypeId() == 'simple'){
+						$resources = $objectManager->get('Magento\Framework\App\ResourceConnection');
+						$connection = $resources->getConnection();                      
+					
+						$sql = "select * from inventory_stock_1 where sku = '".$product->getSku()."'";
+						$result = $connection->fetchAll($sql);
+						$option_label = $result[0]['quantity'];
+						$dubai = (int)$option_label;    
+
+						$resourcess = $objectManager->get('Magento\Framework\App\ResourceConnection');
+						$connection = $resourcess->getConnection();														
+						$sql = "select * from inventory_stock_5 where sku = '".$product->getSku()."'";
+						$result = $connection->fetchAll($sql);
+						$option_label = $result[0]['quantity'];
+						$ksa = (int)$option_label;                       
+							 //echo $ksa;  														
+						 
+						 ?><span class="home-current-stock">Current Stock :<?php echo $dubai+$ksa; 			 
+						 ?></span>
+						 <?php
+						 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+						 $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+						 echo "<br>";
+						 
+						 $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+						 $currency2 = $currencysymbol->getStore()->getCurrentCurrencyCode();
+						 
+						 if ($currency2=="AED") {
+							
+						 $currency = $objectManager->create('Magento\Directory\Model\Currency')->load('AED'); 
+						 $currency2 = $currencysymbol->getStore()->getCurrentCurrencyCode();
+
+						echo  "<h4 class=product-price>AED".number_format($currency->convert($product->getPrice(),'AED'), 2)."</h4>";
+						 }
+						 if ($currency2=="SAR") {
+							
+							$currency = $objectManager->create('Magento\Directory\Model\Currency')->load('AED'); 
+							$currency2 = $currencysymbol->getStore()->getCurrentCurrencyCode();
+ 
+						 echo  "<h4 class=product-price>SAR".number_format($currency->convert($product->getPrice(),'SAR'), 2)."</h4>";
+							}
+	
+					
+				 } 
+				 ?>
+					<?php  
+                                  if($product->getTypeId() == 'configurable'){                
+											$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+											$connection = $resource->getConnection();                      
+										
+											$sql = "select * from inventory_stock_1 where sku = '".$product->getSku()."'";
+											$result = $connection->fetchAll($sql);
+											$option_label = $result[0]['quantity'];
+											$dubai = (int)$option_label;                            
+												 // echo $dubai;                
+										    ?> 
+										   
+				   <?php        
+				   							$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+											$connection = $resource->getConnection();														
+											$sql = "select * from inventory_stock_5 where sku = '".$product->getSku()."'";
+											$result = $connection->fetchAll($sql);
+											$option_label = $result[0]['quantity'];
+											$ksa = (int)$option_label;                       
+											   //echo $ksa;  														
+										   
+										   ?><span class="home-current-stock">Current Stock :<?php echo $dubai+$ksa; ?></span>
+										   
+
+
+
+													<div class="home-product-colors d-flex">
+													<?php 
+														$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+														$baseUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore(0)->getBaseUrl();
+														$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+														$baseurl = $storeManager->getStore()->getBaseUrl();
+														$swatchHelper=$objectManager->get("Magento\Swatches\Helper\Media");
+														$swatchCollection = $objectManager->create('Magento\Swatches\Model\ResourceModel\Swatch\Collection');
+
+														$productTypeInstance = $objectManager->get('Magento\ConfigurableProduct\Model\Product\Type\Configurable');
+														$productAttributeOptions = $productTypeInstance->getConfigurableAttributesAsArray($product);
+													foreach ($productAttributeOptions as $key => $value) {
+													
+														$tmp_option = $value['values'];
+														
+															
+															
+															foreach ($tmp_option as $tmp) 
+															{
+																//var_dump($tmp);
+																//echo "<option value='".$key."_".$tmp['value_index']."'>".$tmp['value_index']."</option>";
+															//[7,4,18,19]
+															$oid = $tmp['value_index'];
+															 
+														
+														
+														//echo '<pre>' , var_dump($options->getData()) , '</pre>';
+														
+														foreach($swatchCollection as $swatch){
+															if($swatch['option_id']== $oid){
+															
+													?>
+													
+													<span style="background-color:<?php echo  $swatch['value'] ?>"></span>
+															
+													<?php 
+													
+													
+												}
+											}
+											}
+										}
+										  ?>	
+	
+													</div>
+													<?php 
+													
+
+													$repository = $objectManager->create('Magento\Catalog\Model\ProductRepository');
+													$product = $repository->getById($product['entity_id']);
+													
+													$data = $product->getTypeInstance()->getConfigurableOptions($product);
+													
+													$options = array();
+													
+													foreach($data as $attr){
+													  foreach($attr as $p){
+														  //var_dump($p);
+														$options[$p['sku']][$p['attribute_code']] = $p['option_title'];
+													  }
+													}
+													
+													
+													foreach($options as $sku =>$d){
+													  $pr = $repository->get($sku);
+													//   foreach($d as $k => $v)
+													// 	echo $k.' - '.$v.' ';
+													//   echo ' : '.$pr->getPrice()."\n";
+													}
+													?>
+													<h4 class="product-price">								 
+														 <?php          
+                        $_childProducts = $product->getTypeInstance()->getUsedProducts($product);
+                        foreach ($_childProducts as $simpleProduct){
+                        $price_child = $simpleProduct['price'];                
+
+                        $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+                        $currency2 = $currencysymbol->getStore()->getCurrentCurrencyCode();
+                        $currency = $objectManager->create('Magento\Directory\Model\Currency')->load('SAR');  
+                        
+                         if($currency2=="AED"){
+                        if ($simpleProduct === reset($_childProducts))                 
+                       echo "AED".number_format($currency->convert($price_child,'AED'), 2);?>
+                       <?php  if ($simpleProduct === end($_childProducts))
+                            echo '';
+                         }
+                         if($currency2=="SAR"){
+                            if ($simpleProduct === reset($_childProducts))                       
+                            echo "SAR".number_format($currency->convert($price_child,'SAR'), 2);
+                            if ($simpleProduct === end($_childProducts))
+                                echo '';
+                     }
+                    
+														}
+													}  
+                 ?></h4>
+													<?php 
+													
+													?>
+												</div>
+									
+									
+
+										
+										</div>
+												</div>
+												</a>			
+												
+		</div>
+		<?php		}								
+											?>
+											</div>
+											</div>
+										
+											
+											<!--  New arrivals End -->
+
+ 
+		<div id="targaryens-panel" class="panel">
+		<div class="owl-carousel" id="owl-pro3">
+		 <?php 
+												$objectManager =  \Magento\Framework\App\ObjectManager::getInstance();        
+
+												$categoryFactory = $objectManager->get('\Magento\Catalog\Model\CategoryFactory');
+												
+												$categoryHelper = $objectManager->get('\Magento\Catalog\Helper\Category');
+												
+												$categoryRepository = $objectManager->get('\Magento\Catalog\Model\CategoryRepository');
+												$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+												$baseurl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+												$categoryId = 149;
+												
+												$category = $categoryFactory->create()->load($categoryId);
+												$categoryProducts = $category->getProductCollection() ->addAttributeToSelect('*');
+												foreach ($categoryProducts as $product) {
+													
+													?>
+<div class="item">
+  <a href="<?php echo $baseurl.$product['name'].'.html' ?>">
+									<div class="prdouct-grid">
+										<div class="card">
+									
+												<span class="product-new">New</span>
+												<img class="card-img-top" src="<?php echo $Url.'pub/media/catalog/product'.$product['small_image'] ?>" alt="Card image cap">
+									
+												<div class="card-body">
+													<h5><?php echo $product['name'] ?></h5>
+													<?php 
+													$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+													$product = $objectManager->create('Magento\Catalog\Model\Product')->load($product['entity_id']);
+													
+													
+													 ?>
+					<?php  
+                                            
+											$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+											$connection = $resource->getConnection();                      
+										
+											$sql = "select * from inventory_stock_1 where sku = '".$product->getSku()."'";
+											$result = $connection->fetchAll($sql);
+											$option_label = $result[0]['quantity'];
+											$dubai = (int)$option_label;                            
+												 // echo $dubai;                
+												?> 
+												
+										   	 <!-- simple products Details -->
+					<?php  
+					if($product->getTypeId() == 'simple'){
+						$resources = $objectManager->get('Magento\Framework\App\ResourceConnection');
+						$connection = $resources->getConnection();                      
+					
+						$sql = "select * from inventory_stock_1 where sku = '".$product->getSku()."'";
+						$result = $connection->fetchAll($sql);
+						$option_label = $result[0]['quantity'];
+						$dubai = (int)$option_label;    
+
+						$resourcess = $objectManager->get('Magento\Framework\App\ResourceConnection');
+						$connection = $resourcess->getConnection();														
+						$sql = "select * from inventory_stock_5 where sku = '".$product->getSku()."'";
+						$result = $connection->fetchAll($sql);
+						$option_label = $result[0]['quantity'];
+						$ksa = (int)$option_label;                       
+							 //echo $ksa;  														
+						 
+						 ?><span class="home-current-stock">Current Stock :<?php echo $dubai+$ksa; 			 
+						 ?></span>
+						 <?php
+						 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+						 $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+						 echo "<br>";
+						 
+						 $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+						 $currency2 = $currencysymbol->getStore()->getCurrentCurrencyCode();
+						 
+						 if ($currency2=="AED") {
+							
+						 $currency = $objectManager->create('Magento\Directory\Model\Currency')->load('AED'); 
+						 $currency2 = $currencysymbol->getStore()->getCurrentCurrencyCode();
+
+						echo  "<h4 class=product-price>AED".number_format($currency->convert($product->getPrice(),'AED'), 2)."</h4>";
+						 }
+						 if ($currency2=="SAR") {
+							
+							$currency = $objectManager->create('Magento\Directory\Model\Currency')->load('AED'); 
+							$currency2 = $currencysymbol->getStore()->getCurrentCurrencyCode();
+ 
+						 echo  "<h4 class=product-price>SAR".number_format($currency->convert($product->getPrice(),'SAR'), 2)."</h4>";
+							}
+	
+					
+				 } 
+				 ?>
+					 <?php        
+					  if($product->getTypeId() == 'configurable'){     
+				   							$resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+											$connection = $resource->getConnection();														
+											$sql = "select * from inventory_stock_5 where sku = '".$product->getSku()."'";
+											$result = $connection->fetchAll($sql);
+											$option_label = $result[0]['quantity'];
+											$ksa = (int)$option_label;                       
+											   //echo $ksa;  														
+										   
+										   ?><span class="home-current-stock">Current Stock :<?php echo $dubai+$ksa; ?></span>
+										   
+
+
+
+													<div class="home-product-colors d-flex">
+													<?php 
+														$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+														$baseUrl = $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore(0)->getBaseUrl();
+														$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+														$baseurl = $storeManager->getStore()->getBaseUrl();
+														$swatchHelper=$objectManager->get("Magento\Swatches\Helper\Media");
+														$swatchCollection = $objectManager->create('Magento\Swatches\Model\ResourceModel\Swatch\Collection');
+
+														$productTypeInstance = $objectManager->get('Magento\ConfigurableProduct\Model\Product\Type\Configurable');
+														$productAttributeOptions = $productTypeInstance->getConfigurableAttributesAsArray($product);
+													foreach ($productAttributeOptions as $key => $value) {
+													
+														$tmp_option = $value['values'];
+														
+															
+															
+															foreach ($tmp_option as $tmp) 
+															{
+																//var_dump($tmp);
+																//echo "<option value='".$key."_".$tmp['value_index']."'>".$tmp['value_index']."</option>";
+															//[7,4,18,19]
+															$oid = $tmp['value_index'];
+															 
+														
+														
+														//echo '<pre>' , var_dump($options->getData()) , '</pre>';
+														
+														foreach($swatchCollection as $swatch){
+															if($swatch['option_id']== $oid){
+															
+													?>
+													
+													<span style="background-color:<?php echo  $swatch['value'] ?>"></span>
+															
+													<?php 
+													
+													
+												}
+											}
+											}
+										}
+										  ?>	
+	
+													</div>
+													<?php 
+													
+
+													$repository = $objectManager->create('Magento\Catalog\Model\ProductRepository');
+													$product = $repository->getById($product['entity_id']);
+													
+													$data = $product->getTypeInstance()->getConfigurableOptions($product);
+													
+													$options = array();
+													
+													foreach($data as $attr){
+													  foreach($attr as $p){
+														  //var_dump($p);
+														$options[$p['sku']][$p['attribute_code']] = $p['option_title'];
+													  }
+													}
+													
+													
+													foreach($options as $sku =>$d){
+													  $pr = $repository->get($sku);
+													//   foreach($d as $k => $v)
+													// 	echo $k.' - '.$v.' ';
+													//   echo ' : '.$pr->getPrice()."\n";
+													}
+													?>
+													<h4 class="product-price">								 
+														 <?php          
+                        $_childProducts = $product->getTypeInstance()->getUsedProducts($product);
+                        foreach ($_childProducts as $simpleProduct){
+                        $price_child = $simpleProduct['price'];                
+
+                        $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+                        $currency2 = $currencysymbol->getStore()->getCurrentCurrencyCode();
+                        $currency = $objectManager->create('Magento\Directory\Model\Currency')->load('SAR');  
+                        
+                         if($currency2=="AED"){
+                        if ($simpleProduct === reset($_childProducts))                 
+                       echo "AED".number_format($currency->convert($price_child,'AED'), 2);?>
+                       <?php  if ($simpleProduct === end($_childProducts))
+                            echo '';
+                         }
+                         if($currency2=="SAR"){
+                            if ($simpleProduct === reset($_childProducts))                       
+                            echo "SAR".number_format($currency->convert($price_child,'SAR'), 2);
+                            if ($simpleProduct === end($_childProducts))
+                                echo '';
+                     }
+                    
+														}  
+													}
+                 ?></h4>
+													<?php 
+													
+													?>
+												</div>
+									
+									
+
+										
+										</div>
+												</div>
+												</a>
+				
+												
+		</div>
+		<?php
+		
+												}
+											
+											?>
+ </div>
+ </div>
+ </div>
+
+ </div>
+
+
+
+	</section>
+
